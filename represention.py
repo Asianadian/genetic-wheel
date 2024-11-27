@@ -7,7 +7,7 @@ def init_representation():
         for x in range(matrix.shape[1]):
             if np.random.rand() < 0.01:
                 matrix[x][y] = 1
-    print(matrix)
+    #print(matrix)
     return matrix
 
 
