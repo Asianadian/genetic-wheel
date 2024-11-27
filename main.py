@@ -2,6 +2,7 @@ import pymunk
 import pymunk.pygame_util
 import pygame
 import sys
+import represention as rep
 
 # Initialize Pygame
 pygame.init()
@@ -12,6 +13,19 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 # Create Pymunk space
 space = pymunk.Space()
 space.gravity = (0, 900)  # Gravity pointing downward
+
+# polygon for wheel
+coord = rep.get_coordinates(rep.init_representation())
+
+# Create a dynamic body
+body = pymunk.Body(1, pymunk.moment_for_poly(1, coord))
+body.position = 300, 300
+
+# Create a polygon shape (triangle)
+shape = pymunk.Poly(body, coord)
+space.add(body, shape)
+
+# print(coord)
 
 # Create a circular body
 mass = 5
