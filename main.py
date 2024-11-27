@@ -24,7 +24,7 @@ circle_shape.friction = 0.5  # Friction for rolling
 space.add(circle_body, circle_shape)
 
 # Create ground
-ground = pymunk.Segment(space.static_body, (0, 550), (800, 550), 5)
+ground = pymunk.Segment(space.static_body, (0, 550), (10000, 550), 5)
 ground.friction = 1.0
 space.add(ground)
 
@@ -48,3 +48,5 @@ while ((pygame.time.get_ticks()-start_ticks)/1000) < 10:
     space.debug_draw(draw_options)
     pygame.display.flip()
     clock.tick(50)
+
+print(circle_body.position)
