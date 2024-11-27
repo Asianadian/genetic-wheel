@@ -20,17 +20,19 @@ space.gravity = (0, 900)  # Gravity pulling down
 
 # Create a static floor
 floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (WIDTH, HEIGHT-50), 5)
-floor.elasticity = 0.8  # Make the floor bouncy
+floor.elasticity = 0.1  # Make the floor bouncy
+floor.friction = 0.8
 space.add(floor)
 
 # Create a falling rectangle using pymunk.Poly (polygon)
 mass = 1
-width, height = 60, 40
-moment = pymunk.moment_for_poly(mass, [(0, -height/2 - 10),(-width/2, -height/2),  (width/2, -height/2), (width/2, height/2), (-width/2, height/2)])
+vertices = rep.get_coordinates(rep.init_representation())
+moment = pymunk.moment_for_poly(mass, vertices)
 body = pymunk.Body(mass, moment)
-body.position = (WIDTH // 2, 100)  # Start above the floor
-shape = pymunk.Poly(body, [(0, -height/2 -10), (-width/2, -height/2), (width/2, -height/2), (width/2, height/2), (-width/2, height/2)])
-shape.elasticity = 0.8  # Make the rectangle bouncy
+body.position = (300, 100)  # Start above the floor
+shape = pymunk.Poly(body, vertices)
+shape.elasticity = 0.1  # Make the rectangle bouncy
+shape.friction = 0.5
 space.add(body, shape)
 
 # Pygame clock for frame rate control
@@ -55,9 +57,9 @@ coord = rep.get_coordinates(rep.init_representation())
 # space.add(circle_body, circle_shape)
 
 # Create ground
-ground = pymunk.Segment(space.static_body, (0, 550), (800, 550), 5)
-ground.friction = 1.0
-space.add(ground)
+# ground = pymunk.Segment(space.static_body, (0, 550), (800, 550), 5)
+# ground.friction = 1.0
+# space.add(ground)
 
 # Apply a tangential force to the circle
 # force = (5000, 0)  # Force vector to the right
@@ -67,10 +69,14 @@ space.add(ground)
 start_ticks = pygame.time.get_ticks()
 
 # Simulation loop
-while ((pygame.time.get_ticks()-start_ticks)/1000) < 10:
+while ((pygame.time.get_ticks()-start_ticks)/1000) < 4:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    print(shape.body.position)
+
+    shape.body.torque = 20000
 
     # Step the physics simulation
     space.step(1 / 60.0)
