@@ -26,25 +26,18 @@ space.add(floor)
 
 # Create a falling rectangle using pymunk.Poly (polygon)
 mass = 1
-vertices = rep.get_coordinates(rep.init_representation())
-moment = pymunk.moment_for_poly(mass, vertices)
-body = pymunk.Body(mass, moment)
-body.position = (300, 100)  # Start above the floor
-shape = pymunk.Poly(body, vertices)
-shape.elasticity = 0.1  # Make the rectangle bouncy
-shape.friction = 0.5
-space.add(body, shape)
+matrix = rep.generate_wheel_matrix()
+position = (0, 300)
+elasticity = 0.1  # Make the rectangle bouncy
+friction = 0.5
+wheel = rep.Wheel(mass, friction, elasticity, matrix, position)
+space.add(wheel.body, wheel.shape)
 
 # Pygame clock for frame rate control
 clock = pygame.time.Clock()
 
 # Set up the pymunk drawing utilities
 draw_options = pymunk.pygame_util.DrawOptions(screen)
-
-# polygon for wheel
-coord = rep.get_coordinates(rep.init_representation())
-
-# print(coord)
 
 # Create a circular body
 # mass = 5
@@ -74,9 +67,9 @@ while ((pygame.time.get_ticks()-start_ticks)/1000) < 4:
         if event.type == pygame.QUIT:
             running = False
 
-    print(shape.body.position)
+    print(wheel.body.position)
 
-    shape.body.torque = 20000
+    wheel.body.torque = 20000
 
     # Step the physics simulation
     space.step(1 / 60.0)
