@@ -26,7 +26,7 @@ def fitness_distance_visualize(representation):
     space = generate_space()
 
     mass = 1
-    position = (50, HEIGHT-120)
+    position = (50, HEIGHT-100)
     elasticity = 0.1
     friction = 0.5
     wheel = rep.Wheel(mass, friction, elasticity, representation, position)
@@ -43,7 +43,7 @@ def fitness_distance_visualize(representation):
             if event.type == pygame.QUIT:
                 running = False
 
-        wheel.body.torque = 20000
+        wheel.body.torque = 10000
 
         space.step(1 / 60.0)
         t += 1
@@ -61,20 +61,20 @@ def fitness_distance(representation):
     space = generate_space()
 
     mass = 1
-    position = (50, HEIGHT-120)
+    position = (50, HEIGHT-100)
     elasticity = 0.1
     friction = 0.5
-    wheel = rep.Wheel(mass, friction, elasticity, representation, position)
+    try:
+        wheel = rep.Wheel(mass, friction, elasticity, representation, position)
+    except Exception as e:
+        return 1e-10
+    
     space.add(wheel.body, wheel.shape)
 
     t = 0
-
+  
     while t < 600:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        wheel.body.torque = 20000
+        wheel.body.torque = 10000
 
         space.step(1 / 60.0)
         t += 1

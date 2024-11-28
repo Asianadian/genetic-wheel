@@ -1,89 +1,58 @@
-import pygame
-import pymunk
-import pymunk.pygame_util
-import pygame
-import sys
-import represention as rep
-from pymunk.vec2d import Vec2d
+import represention
+import genetic
+import mutation
+import fitness
 
-# Initialize pygame and pymunk
-pygame.init()
+import random
 
-# Set up the screen
-WIDTH, HEIGHT = 600, 400
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Pymunk Falling Rectangle (Polygon)")
+import numpy as np
 
-# Create a pymunk space
-space = pymunk.Space()
-space.gravity = (0, 900)  # Gravity pulling down
+POPULATION_SIZE = 500
 
-# Create a static floor
-floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (WIDTH, HEIGHT-50), 5)
-floor.elasticity = 0.1  # Make the floor bouncy
-floor.friction = 0.8
-space.add(floor)
+def genetic_algorithm(population, num_iterations, offspring_per_generation):
+  for i in range(num_iterations):
+    print(i)
+    population_fitness = np.zeros(POPULATION_SIZE)
+    for i, p in enumerate(population):
+      population_fitness[i] = fitness.fitness_distance(p)
 
-# Create a falling rectangle using pymunk.Poly (polygon)
-mass = 1
-matrix = rep.generate_wheel_matrix()
-position = (0, 300)
-elasticity = 0.1  # Make the rectangle bouncy
-friction = 0.5
-wheel = rep.Wheel(mass, friction, elasticity, matrix, position)
-space.add(wheel.body, wheel.shape)
+    sum_fitness = np.sum(population_fitness)
+    population_fitness_prob = population_fitness / sum_fitness
 
-# Pygame clock for frame rate control
-clock = pygame.time.Clock()
+    population_fitness_prob_inv = 1/population_fitness_prob
+    sum_prob = np.sum(population_fitness_prob_inv)
+    population_fitness_prob_inv = population_fitness_prob_inv / sum_prob
 
-# Set up the pymunk drawing utilities
-draw_options = pymunk.pygame_util.DrawOptions(screen)
+    # if max(population_fitness) > THRESHOLD:
+    #   optimal_index = argmax(population_fitness)
+    #   return population[optimal_index]
 
-# Create a circular body
-# mass = 5
-# radius = 30
-# moment = pymunk.moment_for_circle(mass, 0, radius)
-# circle_body = pymunk.Body(mass, moment)
-# circle_body.position = 200, 100  # Starting position
-# circle_shape = pymunk.Circle(circle_body, radius)
-# circle_shape.friction = 0.5  # Friction for rolling
-# space.add(circle_body, circle_shape)
+    # TODO:no replace all 
+    offspring = []
+    for o in range(offspring_per_generation):
+      parent_a_i, parent_b_i = np.random.choice([i for i in range(len(population))], 2, False, p=population_fitness_prob)
+      parent_a, parent_b = population[parent_a_i], population[parent_b_i]
+      curr_offspring = genetic.genetic_split_row(parent_a, parent_b)
+      curr_offspring = mutation.mutate_full_wheel(curr_offspring)
+      offspring.append(curr_offspring)
 
-# Create ground
-# ground = pymunk.Segment(space.static_body, (0, 550), (800, 550), 5)
-# ground.friction = 1.0
-# space.add(ground)
 
-# Apply a tangential force to the circle
-# force = (5000, 0)  # Force vector to the right
-# point = (radius, 0)  # Point on the right edge of the circle
-# circle_body.apply_impulse_at_local_point(force, point)
+    deceased_indices = np.random.choice([i for i in range(len(population))], offspring_per_generation, False, p=population_fitness_prob_inv)
+    for deceased_index in sorted(deceased_indices, reverse=True):
+      del population[deceased_index]
 
-start_ticks = pygame.time.get_ticks()
+    population = population + offspring
 
-# Simulation loop
-while ((pygame.time.get_ticks()-start_ticks)/1000) < 4:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+  return population
 
-    print(wheel.body.position)
+population = [represention.generate_wheel_matrix() for _ in range(POPULATION_SIZE)]
 
-    wheel.body.torque = 20000
+population = genetic_algorithm(population, 100, 100)
 
-    # Step the physics simulation
-    space.step(1 / 60.0)
+population_fitness = np.zeros(POPULATION_SIZE)
+for i, p in enumerate(population):
+    population_fitness[i] = fitness.fitness_distance(p)
 
-    # Fill the screen with white
-    screen.fill((255, 255, 255))
+best = np.argmax(population_fitness)
 
-    # Draw the pymunk space (including the floor and the rectangle)
-    space.debug_draw(draw_options)
-
-    # Update the display
-    pygame.display.flip()
-    clock.tick(50)
-
-# Clean up pygame
-pygame.quit()
-
+fitness.fitness_distance_visualize(population[best])

@@ -5,7 +5,7 @@ def genetic_split_row(x, y):
     n, d = x.shape
     split = random.randrange(1, n)
 
-    print(split)
+    #print(split)
 
     g1 = x[:split]
     g2 = y[split:]
@@ -17,7 +17,7 @@ def genetic_split_col(x, y):
 
     for row in range(n):
         split = random.randrange(1, d)
-        print(split)
+        #print(split)
 
         x[row][split:] = y[row][split:]
 

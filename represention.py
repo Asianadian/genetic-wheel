@@ -7,6 +7,10 @@ class Wheel():
         self.vertices = vertices_from_matrix(matrix)
         self.matrix = matrix
         self.moment = pymunk.moment_for_poly(mass, self.vertices)
+
+        if self.moment < 0:
+            raise Exception("Negative moment")
+        
         self.body = pymunk.Body(mass, self.moment)
         self.body.position = position
         self.shape = pymunk.Poly(self.body, self.vertices)
@@ -18,7 +22,7 @@ class Wheel():
 
 def generate_wheel_matrix():
     matrix = np.zeros((100, 100), dtype=float)
-    vertex_probability = 0.01
+    vertex_probability = 0.001
 
     for y in range(matrix.shape[0]):
         for x in range(matrix.shape[1]):
