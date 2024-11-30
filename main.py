@@ -57,9 +57,9 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation):
 
   return population
 
-population = [represention.generate_wheel_matrix() for _ in range(POPULATION_SIZE)]
+population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
 
-population = genetic_algorithm(population, 100, 100)
+population = genetic_algorithm(population, 10, 100)
 
 population_fitness = np.zeros(POPULATION_SIZE)
 for i, p in enumerate(population):
@@ -68,3 +68,4 @@ for i, p in enumerate(population):
 best = np.argmax(population_fitness)
 
 fitness.fitness_distance_visualize(population[best])
+fitness.draw_wheel_polygon(population[best])

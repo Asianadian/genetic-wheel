@@ -30,13 +30,22 @@ class Wheel():
         self.shape.elasticity = elasticity
 
     def get_raw_data(self):
-        other_data = np.zeros(1, self.matrix.shape[0])
-        other_data[0] = self.mass
-        other_data[1] = self.friction
-        other_data[2] = self.elasticity
-        data = np.concatenate([other_data, self.matrix], axis=1)
+        other_data = np.zeros((1, self.matrix.shape[0]), dtype=float)
+        other_data[0][0] = self.mass
+        other_data[0][1] = self.friction
+        other_data[0][2] = self.elasticity
+        data = np.concatenate([self.matrix, other_data])
 
         return data
+
+def wheel_from_raw_data(data):
+    n = data.shape[0]
+
+    matrix = data[:n]
+    mass = data[-1][0]
+    friction = data[-1][1]
+    elasticity = data[-1][2]
+    return Wheel(mass, friction, elasticity, matrix)
 
 def generate_wheel_matrix():
     matrix = np.zeros((100, 100), dtype=float)
@@ -48,6 +57,15 @@ def generate_wheel_matrix():
                 matrix[x][y] = 1
 
     return matrix
+
+def random_wheel_data():
+    matrix = generate_wheel_matrix()
+    other_data = np.zeros((1, matrix.shape[0]), dtype=float)
+    other_data[0][0] = np.random.rand() + 1e-10
+    other_data[0][1] = np.random.rand() + 1e-10
+    other_data[0][2] = np.random.rand() + 1e-10
+    
+    return np.concatenate([matrix, other_data])
 
 def vertices_from_matrix(representation):
     vertices = [(int(x) - 50, int(y) - 50) for x, y in zip(np.where(representation == 1)[0], np.where(representation == 1)[1])]
