@@ -30,13 +30,13 @@ class Wheel():
         self.shape.elasticity = elasticity
 
     def get_raw_data(self):
-        # other_data = np.zeros(1, self.matrix.shape[0])
-        # other_data[0] = self.mass
-        # other_data[1] = self.friction
-        # other_data[2] = self.elasticity
-        # data = np.concatenate((other_data, self.matrix), axis=1)
+        other_data = np.zeros(1, self.matrix.shape[0])
+        other_data[0] = self.mass
+        other_data[1] = self.friction
+        other_data[2] = self.elasticity
+        data = np.concatenate([other_data, self.matrix], axis=1)
 
-        return self.matrix
+        return data
 
 def generate_wheel_matrix():
     matrix = np.zeros((100, 100), dtype=float)
