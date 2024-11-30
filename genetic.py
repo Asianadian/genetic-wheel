@@ -5,19 +5,20 @@ def genetic_split_row(x, y):
     n, d = x.shape
     split = random.randrange(1, n)
 
-    #print(split)
-
     g1 = x[:split]
     g2 = y[split:]
+    matrix = np.concatenate([g1, g2])
 
-    return np.concatenate([g1, g2])
+    # split = random.randrange(0, 1)
+    # properties = 
+
+    return matrix
 
 def genetic_split_col(x, y):
     n, d = x.shape
 
     for row in range(n):
         split = random.randrange(1, d)
-        #print(split)
 
         x[row][split:] = y[row][split:]
 

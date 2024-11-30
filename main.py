@@ -6,6 +6,18 @@ import fitness
 import random
 
 import numpy as np
+import sys
+
+def handle_exception(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        # Allow KeyboardInterrupt to exit the program
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    
+    print(f"Uncaught exception: {exc_value}")
+    raise Exception("sys except")
+
+sys.excepthook = handle_exception
 
 POPULATION_SIZE = 500
 

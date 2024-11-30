@@ -3,7 +3,7 @@ import numpy as np
 # Mutate all the parameters of the wheel by an amount
 # the shape of the wheel changes with a small probability
 def mutate_full_wheel(wheel_matrix):
-    vertex_mutation_rate = 0.0001
+    vertex_mutation_rate = 0.0005
 
     for i in range(wheel_matrix.shape[0]):
         for j in range(wheel_matrix.shape[1]):
