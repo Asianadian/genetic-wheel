@@ -41,7 +41,7 @@ def generate_space():
 def fitness_distance_visualize(representation):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Pymunk Falling Rectangle (Polygon)")
+    pygame.display.set_caption("Rolling Wheel")
 
     space = generate_space()
 
