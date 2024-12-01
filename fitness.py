@@ -23,10 +23,7 @@ WIDTH, HEIGHT = 600, 400
 # bad distance -> 1
 # good distance -> inf
 def fitness_from_distance(distance):
-    if distance is not None:
-        return distance
-    else:
-        return 1e-10
+    return max(1e-10, distance)
 
     # sigmoid = 1/(1+np.exp(-distance))
     # return 1/(1-sigmoid)
@@ -51,7 +48,7 @@ def fitness_distance_visualize(representation):
 
     wheel = try_creating_wheel(representation)
     if not wheel:
-        return fitness_from_distance(None)
+        return fitness_from_distance(1e-10)
     
     space.add(wheel.body, wheel.shape)
 
@@ -79,14 +76,14 @@ def fitness_distance_visualize(representation):
 
         return fitness_from_distance(wheel.body.position[0])
     except Exception as e:
-        return fitness_from_distance(None)
+        return fitness_from_distance(1e-10)
 
 def fitness_distance(representation):
     space = generate_space()
 
     wheel = try_creating_wheel(representation)
     if not wheel:
-        return fitness_from_distance(None)
+        return fitness_from_distance(1e-10)
     
     space.add(wheel.body, wheel.shape)
 
@@ -100,7 +97,7 @@ def fitness_distance(representation):
             
         return fitness_from_distance(wheel.body.position[0])
     except Exception as e:
-        return fitness_from_distance(None)
+        return fitness_from_distance(1e-10)
     
 def draw_wheel_polygon(representation):
     pygame.init()
@@ -120,7 +117,7 @@ def draw_wheel_polygon(representation):
     
 def try_creating_wheel(representation):
     try:
-        return rep.wheel_from_raw_data(representation)
+        return rep.wheel_from_raw_data(representation, (50, HEIGHT-100))
     except Exception as e:
         return None
 

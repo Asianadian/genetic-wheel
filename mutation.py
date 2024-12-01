@@ -5,7 +5,7 @@ import numpy as np
 def mutate_full_wheel(wheel_matrix):
     n, d = wheel_matrix.shape
     vertex_mutation_rate = 0.0005
-    property_mutation_rate = 0.05
+    property_mutation_rate = 0.01
 
     for i in range(n-1):
         for j in range(d):
@@ -15,6 +15,8 @@ def mutate_full_wheel(wheel_matrix):
                 else:
                     wheel_matrix[i][j] = 0
 
-    for i in range(3):
-        wheel_matrix[-1][i] = wheel_matrix[-1][i] + ((np.random.rand() - 0.5) * property_mutation_rate)
+    for i in range(1, 3):
+        new_value = wheel_matrix[-1][i] + (np.random.uniform(0, property_mutation_rate) - (property_mutation_rate / 2))
+        if new_value > 0 and new_value < 1:
+            wheel_matrix[-1][i] = new_value
                     
