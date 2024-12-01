@@ -39,9 +39,7 @@ class Wheel():
         return data
 
 def wheel_from_raw_data(data, position=(0, 0)):
-    n = data.shape[0]
-
-    matrix = data[:n]
+    matrix = data[:-1]
     mass = data[-1][0]
     friction = data[-1][1]
     elasticity = data[-1][2]
