@@ -33,7 +33,7 @@ def generate_space():
     space.gravity = (0, 900)
 
     floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (2000, HEIGHT-50), 5)
-    floor.elasticity = 0.1
+    floor.elasticity = 0.0
     floor.friction = 0.8
     space.add(floor)
 

@@ -59,9 +59,9 @@ def generate_wheel_matrix():
 def random_wheel_data():
     matrix = generate_wheel_matrix()
     other_data = np.zeros((1, matrix.shape[0]), dtype=float)
-    other_data[0][0] = np.random.uniform(0.5, 1)
-    other_data[0][1] = np.random.uniform(0.5, 1)
-    other_data[0][2] = np.random.uniform(0.5, 1)
+    other_data[0][0] = np.random.uniform(1, 10)
+    other_data[0][1] = np.random.uniform(0, 1-1e-10)
+    other_data[0][2] = 0.5 + np.random.uniform(0, 0.5)
     
     return np.concatenate([matrix, other_data])
 
