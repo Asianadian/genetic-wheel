@@ -24,6 +24,7 @@ WIDTH, HEIGHT = 600, 400
 # good distance -> inf
 def fitness_from_distance(distance):
     return max(1e-10, distance)
+
     # sigmoid = 1/(1+np.exp(-distance))
     # return 1/(1-sigmoid)
 
@@ -32,7 +33,7 @@ def generate_space():
     space.gravity = (0, 900)
 
     floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (2000, HEIGHT-50), 5)
-    floor.elasticity = 0.1
+    floor.elasticity = 0.0
     floor.friction = 0.8
     space.add(floor)
 
@@ -41,22 +42,17 @@ def generate_space():
 def fitness_distance_visualize(representation):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Pymunk Falling Rectangle (Polygon)")
+    pygame.display.set_caption("Rolling Wheel")
 
     space = generate_space()
 
-    mass = 1
-    position = (50, HEIGHT-100)
-    elasticity = 0.1
-    friction = 0.5
-    try:
-        wheel = rep.Wheel(mass, friction, elasticity, representation, position)
-    except Exception as e:
+    wheel = try_creating_wheel(representation)
+    if not wheel:
         return fitness_from_distance(1e-10)
+    
     space.add(wheel.body, wheel.shape)
 
     clock = pygame.time.Clock()
-
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
     t = 0
@@ -77,6 +73,7 @@ def fitness_distance_visualize(representation):
 
             pygame.display.flip()
             clock.tick(60)
+
         return fitness_from_distance(wheel.body.position[0])
     except Exception as e:
         return fitness_from_distance(1e-10)
@@ -84,19 +81,13 @@ def fitness_distance_visualize(representation):
 def fitness_distance(representation):
     space = generate_space()
 
-    mass = 1
-    position = (50, HEIGHT-100)
-    elasticity = 0.1
-    friction = 0.5
-    try:
-        wheel = rep.Wheel(mass, friction, elasticity, representation, position)
-    except Exception as e:
+    wheel = try_creating_wheel(representation)
+    if not wheel:
         return fitness_from_distance(1e-10)
     
     space.add(wheel.body, wheel.shape)
 
     t = 0
-    
     try:
         while t < 600:
             wheel.body.torque = 10000
@@ -107,6 +98,28 @@ def fitness_distance(representation):
         return fitness_from_distance(wheel.body.position[0])
     except Exception as e:
         return fitness_from_distance(1e-10)
+    
+def draw_wheel_polygon(representation):
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Static Wheel")
+
+    space = pymunk.Space()
+    space.gravity = (0, 0)
+
+    wheel = try_creating_wheel(representation)
+    
+    draw_options = pymunk.pygame_util.DrawOptions(screen)
+    screen.fill((255, 255, 255))
+    space.debug_draw(draw_options)
+    pygame.display.flip()
+    
+    
+def try_creating_wheel(representation):
+    try:
+        return rep.wheel_from_raw_data(representation, (50, HEIGHT-100))
+    except Exception as e:
+        return None
 
 if __name__ == '__main__':
   rand = rep.generate_wheel_matrix()
