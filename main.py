@@ -44,7 +44,7 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation):
     for o in range(offspring_per_generation):
       parent_a_i, parent_b_i = np.random.choice([i for i in range(len(population))], 2, False, p=population_fitness_prob)
       parent_a, parent_b = population[parent_a_i], population[parent_b_i]
-      curr_offspring = genetic.genetic_split_row(parent_a, parent_b)
+      curr_offspring = genetic.genetic(parent_a, parent_b)
       mutation.mutate_full_wheel(curr_offspring)
       offspring.append(curr_offspring)
 
