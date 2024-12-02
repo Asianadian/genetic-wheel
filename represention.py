@@ -26,9 +26,10 @@ class Wheel():
 
         self.body = pymunk.Body(mass, self.moment)
         self.body.position = position
-        self.shape = pymunk.Poly(self.body, vertices=self.vertices, radius=0)
+        self.shape = pymunk.Poly(self.body, vertices=self.vertices, radius=0.1)
         self.shape.friction = friction
         self.shape.elasticity = elasticity
+        self.shape.filter = pymunk.ShapeFilter(group=2)
 
     def get_raw_data(self):
         other_data = np.zeros((1, self.matrix.shape[0]), dtype=float)

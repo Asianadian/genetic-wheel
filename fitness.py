@@ -32,12 +32,57 @@ def generate_space():
     space = pymunk.Space()
     space.gravity = (0, 900)
 
-    floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (2000, HEIGHT-50), 5)
+    floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (100000, HEIGHT-50), 5)
+    floor.filter = pymunk.ShapeFilter(group=1)
     floor.elasticity = 0.0
     floor.friction = 0.8
     space.add(floor)
 
     return space
+
+def visualize(representations):
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+
+    pygame.display.set_caption("Rolling Wheel")
+
+    draw_options = pymunk.pygame_util.DrawOptions(screen)
+    draw_options.shape_outline_color = (0, 0, 0, 255)
+
+    space = generate_space()
+
+    wheels = []
+
+    for i, representation in enumerate(representations):
+        wheel = try_creating_wheel(representation)
+        if wheel:
+            wheels.append(wheel)
+            space.add(wheel.body, wheel.shape)
+            wheel.shape.color = (255*np.random.rand(), 255*np.random.rand(), 255*np.random.rand(), 32)
+
+    clock = pygame.time.Clock()
+
+    t = 0
+    try:
+        while t < 600:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            for wheel in wheels:
+                wheel.body.torque = 10000
+
+            space.step(1 / 60.0)
+            t += 1
+
+            screen.fill((255, 255, 255))
+
+            space.debug_draw(draw_options)
+
+            pygame.display.flip()
+            clock.tick(60)
+    except:
+        print("Failed visualization")
 
 def fitness_distance_visualize(representation):
     pygame.init()
@@ -113,11 +158,10 @@ def draw_wheel_polygon(representation):
     screen.fill((255, 255, 255))
     space.debug_draw(draw_options)
     pygame.display.flip()
-    
-    
+      
 def try_creating_wheel(representation):
     try:
-        return rep.wheel_from_raw_data(representation, (50, HEIGHT-100))
+        return rep.wheel_from_raw_data(representation, (50, HEIGHT-150))
     except Exception as e:
         return None
 

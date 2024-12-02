@@ -5,11 +5,11 @@ from const import NUM_PROPERTIES
 def genetic(wheel_matrix_1, wheel_matrix_2):
     structure_matrix_1, structure_matrix_2 = wheel_matrix_1[:-1], wheel_matrix_2[:-1]
     out_structure_matrix = genetic_split_structure_by_row(structure_matrix_1, structure_matrix_2)
-    print(out_structure_matrix.shape)
+    #print(out_structure_matrix.shape)
 
     property_matrix_1, property_matrix_2 = wheel_matrix_1[-1], wheel_matrix_2[-1]
     out_property_matrix = genetic_split_properties(property_matrix_1, property_matrix_2)
-    print(out_property_matrix.shape)
+    #print(out_property_matrix.shape)
     return np.concatenate([out_structure_matrix, out_property_matrix])
 
 def genetic_split_structure(structure_matrix_1, structure_matrix_2):

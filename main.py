@@ -15,18 +15,21 @@ def handle_exception(exc_type, exc_value, exc_traceback):
         return
     
     print(f"Uncaught exception: {exc_value}")
-    raise Exception("sys except")
+    raise Exception("System exception")
 
 sys.excepthook = handle_exception
 
 POPULATION_SIZE = 500
 
-def genetic_algorithm(population, num_iterations, offspring_per_generation):
+def genetic_algorithm(population, num_iterations, offspring_per_generation, snapshots=False, graph=False):
+  max_fitness_per_generation = []
   for i in range(num_iterations):
-    print(i)
+    print('Generation', i)
     population_fitness = np.zeros(POPULATION_SIZE)
     for i, p in enumerate(population):
       population_fitness[i] = fitness.fitness_distance(p)
+
+    max_fitness_per_generation.append(population[np.argmax(population_fitness)])
 
     sum_fitness = np.sum(population_fitness)
     population_fitness_prob = population_fitness / sum_fitness
@@ -34,10 +37,6 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation):
     population_fitness_prob_inv = 1/population_fitness_prob
     sum_prob = np.sum(population_fitness_prob_inv)
     population_fitness_prob_inv = population_fitness_prob_inv / sum_prob
-
-    # if max(population_fitness) > THRESHOLD:
-    #   optimal_index = argmax(population_fitness)
-    #   return population[optimal_index]
 
     # TODO:no replace all 
     offspring = []
@@ -55,19 +54,22 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation):
 
     population = population + offspring
 
-  return population
+  return population, max_fitness_per_generation
 
 population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
 
-population = genetic_algorithm(population, 50, 100)
+population, max_fitness_per_generation = genetic_algorithm(population, 100, 100)
 
-population_fitness = np.zeros(POPULATION_SIZE)
-for i, p in enumerate(population):
-    population_fitness[i] = fitness.fitness_distance(p)
+print(len(max_fitness_per_generation))
+fitness.visualize(max_fitness_per_generation)
 
-best = np.argmax(population_fitness)
+# population_fitness = np.zeros(POPULATION_SIZE)
+# for i, p in enumerate(population):
+#     population_fitness[i] = fitness.fitness_distance(p)
 
-print(fitness.fitness_distance_visualize(population[best]))
-print(population_fitness[best])
-print(population[best])
+# best = np.argmax(population_fitness)
+
+# print(fitness.fitness_distance_visualize(population[best]))
+# print(population_fitness[best])
+# print(population[best])
 # fitness.draw_wheel_polygon(population[best])
