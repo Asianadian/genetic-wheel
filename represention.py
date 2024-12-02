@@ -59,7 +59,7 @@ def generate_wheel_matrix():
 
 def random_wheel_data():
     matrix = generate_wheel_matrix()
-    other_data = np.zeros((1, matrix.shape[0]), dtype=float)
+    other_data = np.zeros((1, matrix.shape[1]), dtype=float)
     other_data[0][0] = np.random.uniform(MASS_LOWER_BOUND, MASS_UPPER_BOUND)
     other_data[0][1] = np.random.uniform(FRICTION_LOWER_BOUND, FRICTION_UPPER_BOUND)
     other_data[0][2] = np.random.uniform(ELASTICITY_LOWER_BOUND, ELASTICITY_UPPER_BOUND)
