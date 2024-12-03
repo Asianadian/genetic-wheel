@@ -74,10 +74,10 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, gene
 
   return population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation
 
-population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
-
 for genetic_structure_function in genetic.GENETIC_STRUCTURE_FUNCTIONS:
     for genetic_property_function in genetic.GENETIC_PROPERTY_FUNCTIONS:
+        
+        population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
         population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
 
         # show results
