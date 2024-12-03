@@ -36,6 +36,7 @@ def plot_averate_properties_per_generation(avg_properties_per_generation):
   plt.xticks(np.arange(0, gen, 10))
 
   # Show the plot
+  plt.savefig('AVG_P.png')
   plt.show()
 
 def plot_max_fitness_per_generation(max_fitness_per_generation):
@@ -55,6 +56,7 @@ def plot_max_fitness_per_generation(max_fitness_per_generation):
   plt.xticks(np.arange(0, gen, 10))
 
   # Show the plot
+  plt.savefig('MAX_F.png')
   plt.show()
 
 def plot_average_fitness_per_generation(avg_fitness_per_generation):
@@ -74,6 +76,7 @@ def plot_average_fitness_per_generation(avg_fitness_per_generation):
   plt.xticks(np.arange(0, gen, 10))
 
   # Show the plot
+  plt.savefig('AVG_F.png')
   plt.show()
 
 def handle_exception(exc_type, exc_value, exc_traceback):
