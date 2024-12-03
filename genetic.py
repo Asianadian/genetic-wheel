@@ -1,7 +1,14 @@
-import random
-import numpy as np
 from const import NUM_PROPERTIES
+import numpy as np
+import random
 
+'''
+Generic genetic function
+
+Uses a genetic function on the structure and a genetic function on the properties
+
+Returns new representation
+'''
 def genetic(wheel_matrix_1, wheel_matrix_2, genetic_structure_function, genetic_property_function):
     structure_matrix_1, structure_matrix_2 = wheel_matrix_1[:-1], wheel_matrix_2[:-1]
     out_structure_matrix = genetic_structure_function(structure_matrix_1, structure_matrix_2)
@@ -11,6 +18,13 @@ def genetic(wheel_matrix_1, wheel_matrix_2, genetic_structure_function, genetic_
 
     return np.concatenate([out_structure_matrix, out_property_matrix])
 
+'''
+Genetic function for structure
+
+Chooses a row number, takes all rows before that number from the first matrix, and all remaining rows from the second matrix
+
+Returns the concatenation of those rows
+'''
 def genetic_split_structure(structure_matrix_1, structure_matrix_2):
     n, d = structure_matrix_1.shape
     
@@ -21,6 +35,14 @@ def genetic_split_structure(structure_matrix_1, structure_matrix_2):
 
     return structure_matrix
 
+'''
+Genetic function for structure
+
+For each row
+    Chooses a column number, takes all elements before that number from the row, and all remaining elements from the second matrix
+
+Returns the concatenation of those rows
+'''
 def genetic_split_structure_by_row(structure_matrix_1, structure_matrix_2):
     n, d = structure_matrix_1.shape
     
@@ -32,6 +54,14 @@ def genetic_split_structure_by_row(structure_matrix_1, structure_matrix_2):
 
     return structure_matrix
 
+'''
+Genetic function for structure
+
+For each element
+    Choose element from first matrix with probability 50%, otherwise choose element from second matrix
+
+Returns the concatenation of those elements
+'''
 def genetic_split_structure_by_element(structure_matrix_1, structure_matrix_2):
     n, d = structure_matrix_1.shape
 
@@ -42,6 +72,13 @@ def genetic_split_structure_by_element(structure_matrix_1, structure_matrix_2):
 
     return structure_matrix
 
+'''
+Genetic function for properties
+
+Choose a column number, take all properties before that number from the first matrix, and all remaining properties from the second matrix
+
+Returns the concatenation of properties
+'''
 def genetic_split_properties(property_matrix_1, property_matrix_2):
     property_matrix = np.zeros_like(property_matrix_1)
 
@@ -51,6 +88,14 @@ def genetic_split_properties(property_matrix_1, property_matrix_2):
 
     return property_matrix[:, None].T
 
+'''
+Genetic function for properties
+
+For each property
+    Choose property from the first matrix with probability 50%, otherwise choose element from second matrix
+
+Returns the concatenation of properties
+'''
 def genetic_split_properties_by_property(property_matrix_1, property_matrix_2):
     property_matrix = np.zeros_like(property_matrix_1)
 
@@ -59,6 +104,11 @@ def genetic_split_properties_by_property(property_matrix_1, property_matrix_2):
 
     return property_matrix[:, None].T
 
+'''
+Genetic function for properties
+
+Returns the mean of all properties
+'''
 def genetic_mean_properties(property_matrix_1, property_matrix_2):
     property_matrix = (property_matrix_1 + property_matrix_2)/2
 

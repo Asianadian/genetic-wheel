@@ -2,82 +2,10 @@ import represention
 import genetic
 import mutation
 import fitness
-from matplotlib import pyplot as plt
 from const import NUM_PROPERTIES, POPULATION_SIZE, NUM_ITERATIONS, NUM_OFFSPRING
-
-import random
 
 import numpy as np
 import sys
-
-def plot_averate_properties_per_generation(avg_properties_per_generation):
-  gen = len(avg_fitness_per_generation)
-
-  mass = avg_properties_per_generation[:, 0]
-  friction = avg_properties_per_generation[:, 1]
-  elasticity = avg_properties_per_generation[:, 2]
-
-  # Create a plot
-  plt.plot(mass, label='Mass', color='r')
-  plt.plot(friction, label='Friction', color='g')
-  plt.plot(elasticity, label='Elasticity', color='b')
-
-  # Add labels and title
-  plt.xlabel('Generation')
-  plt.ylabel('Avg Property Value')
-  plt.title('Evolution of Properties per Generation')
-
-  # Display grid for better readability
-  plt.grid(True)
-
-  # Add a legend to differentiate the lines
-  plt.legend()
-
-  plt.xticks(np.arange(0, gen, 10))
-
-  # Show the plot
-  plt.savefig('AVG_P.png')
-  plt.show()
-
-def plot_max_fitness_per_generation(max_fitness_per_generation):
-  gen = len(avg_fitness_per_generation)
-
-  # Create a plot
-  plt.plot(max_fitness_per_generation, marker='o', color='b', linestyle='-', markersize=6)
-
-  # Add labels and title
-  plt.xlabel('Generation')
-  plt.ylabel('Max Fitness')
-  plt.title('Max Fitness per Generation')
-
-  # Display grid for better readability
-  plt.grid(True)
-
-  plt.xticks(np.arange(0, gen, 10))
-
-  # Show the plot
-  plt.savefig('MAX_F.png')
-  plt.show()
-
-def plot_average_fitness_per_generation(avg_fitness_per_generation):
-  gen = len(avg_fitness_per_generation)
-
-  # Create a plot
-  plt.plot(avg_fitness_per_generation, marker='o', color='b', linestyle='-', markersize=6)
-
-  # Add labels and title
-  plt.xlabel('Generation')
-  plt.ylabel('Avg Fitness')
-  plt.title('Avg Fitness per Generation')
-
-  # Display grid for better readability
-  plt.grid(True)
-
-  plt.xticks(np.arange(0, gen, 10))
-
-  # Show the plot
-  plt.savefig('AVG_F.png')
-  plt.show()
 
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
