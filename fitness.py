@@ -19,7 +19,7 @@ def handle_exception(exc_type, exc_value, exc_traceback):
         return
     
     print(f"Uncaught exception: {exc_value}")
-    raise Exception("Sys except")
+    raise Exception("System exception")
 sys.excepthook = handle_exception
 
 def fitness_from_distance(distance):
