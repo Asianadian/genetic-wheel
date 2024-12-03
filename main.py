@@ -10,7 +10,7 @@ import random
 import numpy as np
 import sys
 
-def plot_averate_properties_per_generation(avg_properties_per_generation):
+def plot_averate_properties_per_generation(avg_properties_per_generation, meta_data=''):
   gen = len(avg_fitness_per_generation)
 
   mass = avg_properties_per_generation[:, 0]
@@ -36,10 +36,10 @@ def plot_averate_properties_per_generation(avg_properties_per_generation):
   plt.xticks(np.arange(0, gen, 10))
 
   # Show the plot
-  plt.savefig('AVG_P.png')
+  plt.savefig(f'logs/AVG_P{meta_data}.png')
   plt.show()
 
-def plot_max_fitness_per_generation(max_fitness_per_generation):
+def plot_max_fitness_per_generation(max_fitness_per_generation, meta_data=''):
   gen = len(avg_fitness_per_generation)
 
   # Create a plot
@@ -56,10 +56,10 @@ def plot_max_fitness_per_generation(max_fitness_per_generation):
   plt.xticks(np.arange(0, gen, 10))
 
   # Show the plot
-  plt.savefig('MAX_F.png')
+  plt.savefig(f'logs/MAX_F{meta_data}.png')
   plt.show()
 
-def plot_average_fitness_per_generation(avg_fitness_per_generation):
+def plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data=''):
   gen = len(avg_fitness_per_generation)
 
   # Create a plot
@@ -76,7 +76,7 @@ def plot_average_fitness_per_generation(avg_fitness_per_generation):
   plt.xticks(np.arange(0, gen, 10))
 
   # Show the plot
-  plt.savefig('AVG_F.png')
+  plt.savefig(f'logs/AVG_F{meta_data}.png')
   plt.show()
 
 def handle_exception(exc_type, exc_value, exc_traceback):
@@ -139,17 +139,17 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, gene
 
   return population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation
 
-population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
-
-for genetic_structure_function in genetic.GENETIC_STRUCTURE_FUNCTIONS:
-    for genetic_property_function in genetic.GENETIC_PROPERTY_FUNCTIONS:
+for i, genetic_structure_function in enumerate(genetic.GENETIC_STRUCTURE_FUNCTIONS):
+    for j, genetic_property_function in enumerate(genetic.GENETIC_PROPERTY_FUNCTIONS):
+        population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
         population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
 
         # show results
+        print(f"\nCompleted running population with [{i}]:{str(genetic_structure_function)} and [{j}]:{str(genetic_property_function)}\n")
         fitness.visualize(max_fitness_wheel_per_generation)
-        plot_max_fitness_per_generation(max_fitness_per_generation)
-        plot_average_fitness_per_generation(avg_fitness_per_generation)
-        plot_averate_properties_per_generation(avg_properties_per_generation)
+        plot_max_fitness_per_generation(max_fitness_per_generation, f'_{i}_{j}')
+        plot_average_fitness_per_generation(avg_fitness_per_generation, f'_{i}_{j}')
+        plot_averate_properties_per_generation(avg_properties_per_generation, f'_{i}_{j}')
 
 # population_fitness = np.zeros(POPULATION_SIZE)
 # for i, p in enumerate(population):

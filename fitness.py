@@ -3,6 +3,7 @@ import pymunk
 import pymunk.pygame_util
 import pygame
 import represention as rep
+from const import WIDTH, HEIGHT
 from pymunk.vec2d import Vec2d
 import numpy as np
 import sys
@@ -17,8 +18,6 @@ def handle_exception(exc_type, exc_value, exc_traceback):
     raise Exception("sys except")
 
 sys.excepthook = handle_exception
-
-WIDTH, HEIGHT = 600, 400
 
 # bad distance -> 1
 # good distance -> inf
