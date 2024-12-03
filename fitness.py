@@ -56,6 +56,7 @@ def visualize(representations):
     for i, representation in enumerate(representations):
         wheel = try_creating_wheel(representation)
         if wheel:
+            #print(representation)
             wheels.append(wheel)
             space.add(wheel.body, wheel.shape)
             wheel.shape.color = (255*np.random.rand(), 255*np.random.rand(), 255*np.random.rand(), 32)
