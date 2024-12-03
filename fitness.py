@@ -87,9 +87,14 @@ def visualize(representations):
 
             pygame.display.flip()
             clock.tick(60)
+        
+        pygame.display.quit()
+        pygame.quit()
     except:
+        pygame.display.quit()
+        pygame.quit()
         print("Failed visualization")
-
+    
 '''
 Visualizes 1 wheel in pygame
 
@@ -131,9 +136,13 @@ def fitness_distance_visualize(representation):
 
             pygame.display.flip()
             clock.tick(60)
-
+        
+        pygame.display.quit()
+        pygame.quit()
         return fitness_from_distance(wheel.body.position[0])
     except Exception as e:
+        pygame.display.quit()
+        pygame.quit()
         return fitness_from_distance(1e-10)
 
 '''
@@ -157,9 +166,13 @@ def fitness_distance(representation):
 
             space.step(1 / 60.0)
             t += 1
-            
+        
+        pygame.display.quit()
+        pygame.quit()
         return fitness_from_distance(wheel.body.position[0])
     except Exception as e:
+        pygame.display.quit()
+        pygame.quit()
         return fitness_from_distance(1e-10)
     
 '''
