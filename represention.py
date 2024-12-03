@@ -1,9 +1,14 @@
+from const import MASS_LOWER_BOUND, MASS_UPPER_BOUND, ELASTICITY_LOWER_BOUND, ELASTICITY_UPPER_BOUND, FRICTION_LOWER_BOUND, FRICTION_UPPER_BOUND
+from scipy.spatial import ConvexHull
 import numpy as np
 import pymunk
 import sys
-from const import MASS_LOWER_BOUND, MASS_UPPER_BOUND, ELASTICITY_LOWER_BOUND, ELASTICITY_UPPER_BOUND, FRICTION_LOWER_BOUND, FRICTION_UPPER_BOUND
-from scipy.spatial import ConvexHull
 
+'''
+Exception handling for Chipmunk2D 
+
+pymunk terminates the program instead of throwing exceptions in some cases
+'''
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
         # Allow KeyboardInterrupt to exit the program
@@ -12,9 +17,11 @@ def handle_exception(exc_type, exc_value, exc_traceback):
     
     print(f"Uncaught exception: {exc_value}")
     raise Exception("sys except")
-
 sys.excepthook = handle_exception
 
+'''
+Wheel class for pymunk body and shape resulting from wheel representation
+'''
 class Wheel():
     def __init__(self, mass, friction, elasticity, matrix, position=(0, 0)):
         self.mass = mass
@@ -31,7 +38,10 @@ class Wheel():
         self.shape.friction = friction
         self.shape.elasticity = elasticity
         self.shape.filter = pymunk.ShapeFilter(group=2)
-
+    
+    '''
+    Get wheel representation from Wheel object
+    '''
     def get_raw_data(self):
         other_data = np.zeros((1, self.matrix.shape[0]), dtype=float)
         other_data[0][0] = self.mass
@@ -41,13 +51,23 @@ class Wheel():
 
         return data
 
+'''
+Create Wheel from wheel representation
+
+Returns Wheel
+'''
 def wheel_from_raw_data(data, position=(0, 0)):
-    matrix = data[:-1]
+    structural_matrix = data[:-1]
     mass = data[-1][0]
     friction = data[-1][1]
     elasticity = data[-1][2]
-    return Wheel(mass, friction, elasticity, matrix, position)
+    return Wheel(mass, friction, elasticity, structural_matrix, position)
 
+'''
+Create random structural matrix
+
+Returns structural matrix
+'''
 def generate_wheel_matrix():
     matrix = np.zeros((100, 100), dtype=float)
     vertex_probability = 0.005
@@ -59,6 +79,11 @@ def generate_wheel_matrix():
 
     return matrix
 
+'''
+Create random wheel representation
+
+Returns wheel representation
+'''
 def random_wheel_data():
     matrix = generate_wheel_matrix()
     other_data = np.zeros((1, matrix.shape[1]), dtype=float)
@@ -68,11 +93,22 @@ def random_wheel_data():
     
     return np.concatenate([matrix, other_data])
 
+'''
+Finds vertices for convex shape from structural matrix
+
+Returns convex hull vertices centered around (0, 0)
+'''
 def vertices_from_matrix(representation):
+    # Get all vertices from structural matrix
     vertices = [(int(x), int(y)) for x, y in zip(np.where(representation == 1)[0], np.where(representation == 1)[1])]
+
+    # Get convex hull vertices
     vertices = get_convex_hull(vertices)
+
+    # Get center of mass of convex hull constant assuming constant density
     centroid = calculate_centroid(vertices)
     
+    # Off-set all vertices by centroid - for pymunk Body, Shape, and moment
     for i in range(len(vertices)):
         vertices[i] = (vertices[i][0] - centroid[0], vertices[i][1] - centroid[1])
     
@@ -81,40 +117,39 @@ def vertices_from_matrix(representation):
     
     return vertices
 
+'''
+Finds convex hull vertices
+
+Returns convex hull vertices
+'''
 def get_convex_hull(vertices):
 
     if len(vertices) < 3:
         raise ValueError("At least 3 vertices are required to calculate a convex hull")
     
-    # Convert vertices to a NumPy array
     points = np.array(vertices)
     
-    # Compute the convex hull
     hull = ConvexHull(points)
-    
-    # Extract the vertices of the hull in counterclockwise order
+
     hull_vertices = [tuple(points[vertex]) for vertex in hull.vertices]
     
     return hull_vertices
 
+'''
+Calculates centroid given convex hull vertices
+
+Uses shoelace formula to find area of convex hull
+
+Returns centroid
+'''
 def calculate_centroid(vertices):
-    """
-    Calculate the centroid of a polygon given its vertices.
-    
-    Parameters:
-    vertices (list of tuples): List of (x, y) tuples representing the vertices of the polygon.
-    
-    Returns:
-    tuple: (x, y) coordinates of the centroid.
-    """
-    if len(vertices) < 3:  # A polygon must have at least three vertices
+    if len(vertices) < 3:
         raise ValueError("A polygon must have at least three vertices.")
     
     # Ensure the polygon is closed by appending the first vertex at the end
     vertices = vertices + [vertices[0]]
     
-    # Compute the centroid
-    A = 0  # Area of the polygon
+    A = 0
     Cx = 0
     Cy = 0
     for i in range(len(vertices) - 1):
@@ -126,17 +161,9 @@ def calculate_centroid(vertices):
         Cy += (y0 + y1) * common_factor
     
     A *= 0.5
-    if A == 0:  # To avoid division by zero
+    if A == 0:
         raise ValueError("The vertices do not form a valid polygon (zero area).")
     
     Cx /= (6 * A)
     Cy /= (6 * A)
     return (Cx, Cy)
-
-
-if __name__ == '__main__':
-    mat = generate_wheel_matrix()
-    print(mat)
-    print(vertices_from_matrix(mat))
-    #print(vertices_from_matrix(mat))
-    #wheel = Wheel(1, 0.5, 0.1, vertices_from_matrix(mat))

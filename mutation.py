@@ -1,8 +1,13 @@
-import numpy as np
 from const import MASS_LOWER_BOUND, MASS_UPPER_BOUND, ELASTICITY_LOWER_BOUND, ELASTICITY_UPPER_BOUND, FRICTION_LOWER_BOUND, FRICTION_UPPER_BOUND
+import numpy as np
 
-# Mutate all the parameters of the wheel by an amount
-# the shape of the wheel changes with a small probability
+'''
+Mutates a wheel representation
+
+Flips bits in structure matrix with small probability
+
+Increases or decreases properties by 5% with small probability
+'''
 def mutate_full_wheel(wheel_matrix):
     n, d = wheel_matrix.shape
     vertex_mutation_rate = 0.0005
