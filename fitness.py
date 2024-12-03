@@ -34,7 +34,7 @@ Returns pymunk Space
 '''
 def generate_space():
     space = pymunk.Space()
-    space.gravity = (0, 900)
+    space.gravity = (0, 981)
 
     floor = pymunk.Segment(space.static_body, (0, HEIGHT-50), (100000, HEIGHT-50), 5)
     floor.filter = pymunk.ShapeFilter(group=1)
