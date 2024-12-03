@@ -1,33 +1,37 @@
+import numpy as np
+import pygame
 import pygame
 import pymunk
 import pymunk.pygame_util
-import pygame
 import represention as rep
-from pymunk.vec2d import Vec2d
-import numpy as np
 import sys
 
+WIDTH, HEIGHT = 1200, 400
+
+'''
+Exception handling for Chipmunk2D 
+
+pymunk terminates the program instead of throwing exceptions in some cases
+'''
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
-        # Allow KeyboardInterrupt to exit the program
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
     
     print(f"Uncaught exception: {exc_value}")
-    raise Exception("sys except")
-
+    raise Exception("System exception")
 sys.excepthook = handle_exception
 
-WIDTH, HEIGHT = 600, 400
-
-# bad distance -> 1
-# good distance -> inf
 def fitness_from_distance(distance):
     return max(1e-10, distance)
 
-    # sigmoid = 1/(1+np.exp(-distance))
-    # return 1/(1-sigmoid)
+'''
+Creates simulation space
 
+pymunk Space and horizontal Segment with set physical properties
+
+Returns pymunk Space
+'''
 def generate_space():
     space = pymunk.Space()
     space.gravity = (0, 900)
@@ -40,10 +44,12 @@ def generate_space():
 
     return space
 
+'''
+Visualizes list of wheels in pygame
+'''
 def visualize(representations):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-
     pygame.display.set_caption("Rolling Wheel")
 
     draw_options = pymunk.pygame_util.DrawOptions(screen)
@@ -56,7 +62,6 @@ def visualize(representations):
     for i, representation in enumerate(representations):
         wheel = try_creating_wheel(representation)
         if wheel:
-            #print(representation)
             wheels.append(wheel)
             space.add(wheel.body, wheel.shape)
             wheel.shape.color = (255*np.random.rand(), 255*np.random.rand(), 255*np.random.rand(), 32)
@@ -85,21 +90,28 @@ def visualize(representations):
     except:
         print("Failed visualization")
 
+'''
+Visualizes 1 wheel in pygame
+
+Returns distance traveled by wheel
+'''
 def fitness_distance_visualize(representation):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Rolling Wheel")
+    
+    draw_options = pymunk.pygame_util.DrawOptions(screen)
 
     space = generate_space()
 
     wheel = try_creating_wheel(representation)
+
     if not wheel:
         return fitness_from_distance(1e-10)
     
     space.add(wheel.body, wheel.shape)
 
     clock = pygame.time.Clock()
-    draw_options = pymunk.pygame_util.DrawOptions(screen)
 
     t = 0
     try:
@@ -124,6 +136,11 @@ def fitness_distance_visualize(representation):
     except Exception as e:
         return fitness_from_distance(1e-10)
 
+'''
+Simulates 1 wheel in pygame
+
+Returns distance traveled by wheel
+'''
 def fitness_distance(representation):
     space = generate_space()
 
@@ -145,6 +162,9 @@ def fitness_distance(representation):
     except Exception as e:
         return fitness_from_distance(1e-10)
     
+'''
+???
+'''
 def draw_wheel_polygon(representation):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -159,14 +179,14 @@ def draw_wheel_polygon(representation):
     screen.fill((255, 255, 255))
     space.debug_draw(draw_options)
     pygame.display.flip()
-      
+
+'''
+Handles failed wheels
+
+Returns wheel object if possible
+'''  
 def try_creating_wheel(representation):
     try:
         return rep.wheel_from_raw_data(representation, (50, HEIGHT-150))
     except Exception as e:
         return None
-
-if __name__ == '__main__':
-  rand = rep.generate_wheel_matrix()
-  print(fitness_distance_visualize(rand))
-  print(fitness_distance(rand))
