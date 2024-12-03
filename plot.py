@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-def plot_averate_properties_per_generation(avg_properties_per_generation):
+def plot_averate_properties_per_generation(avg_properties_per_generation, meta_data='', show=False):
   gen = len(avg_properties_per_generation)
 
   mass = avg_properties_per_generation[:, 0]
@@ -22,10 +22,10 @@ def plot_averate_properties_per_generation(avg_properties_per_generation):
 
   plt.xticks(np.arange(0, gen, 10))
 
-  plt.savefig('AVG_P.png')
-  plt.show()
+  plt.savefig(f'logs/AVG_P{meta_data}.png')
+  if show: plt.show()
 
-def plot_max_fitness_per_generation(max_fitness_per_generation):
+def plot_max_fitness_per_generation(max_fitness_per_generation, meta_data='', show=False):
   gen = len(max_fitness_per_generation)
 
   plt.plot(max_fitness_per_generation, marker='o', color='b', linestyle='-', markersize=6)
@@ -38,10 +38,10 @@ def plot_max_fitness_per_generation(max_fitness_per_generation):
 
   plt.xticks(np.arange(0, gen, 10))
 
-  plt.savefig('MAX_F.png')
-  plt.show()
+  plt.savefig(f'logs/MAX_F{meta_data}.png')
+  if show: plt.show()
 
-def plot_average_fitness_per_generation(avg_fitness_per_generation):
+def plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data='', show=False):
   gen = len(avg_fitness_per_generation)
 
   plt.plot(avg_fitness_per_generation, marker='o', color='b', linestyle='-', markersize=6)
@@ -54,5 +54,5 @@ def plot_average_fitness_per_generation(avg_fitness_per_generation):
 
   plt.xticks(np.arange(0, gen, 10))
 
-  plt.savefig('AVG_F.png')
-  plt.show()
+  plt.savefig(f'logs/AVG_F{meta_data}.png')
+  if show: plt.show()

@@ -4,9 +4,8 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 import represention as rep
+from const import WIDTH, HEIGHT
 import sys
-
-WIDTH, HEIGHT = 1200, 400
 
 '''
 Exception handling for Chipmunk2D 

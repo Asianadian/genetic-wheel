@@ -74,14 +74,31 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, gene
 
   return population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation
 
-for genetic_structure_function in genetic.GENETIC_STRUCTURE_FUNCTIONS:
-    for genetic_property_function in genetic.GENETIC_PROPERTY_FUNCTIONS:
-        
-        population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
-        population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
+'''
+Testing environment for genetic algorithm
 
-        # show results
-        fitness.visualize(max_fitness_wheel_per_generation)
-        plot_max_fitness_per_generation(max_fitness_per_generation)
-        plot_average_fitness_per_generation(avg_fitness_per_generation)
-        plot_averate_properties_per_generation(avg_properties_per_generation)
+Runs genetic algorithm with all variations of genetic functions and visualizes results
+'''
+def run_experiments():
+    for s, genetic_structure_function in enumerate(genetic.GENETIC_STRUCTURE_FUNCTIONS):
+        for p, genetic_property_function in enumerate(genetic.GENETIC_PROPERTY_FUNCTIONS):
+            
+            population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
+            population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
+
+            # show results
+            fitness.visualize(max_fitness_wheel_per_generation)
+            plot_max_fitness_per_generation(max_fitness_per_generation, meta_data=f'_{s}_{p}')
+            plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data=f'_{s}_{p}')
+            plot_averate_properties_per_generation(avg_properties_per_generation, meta_data=f'_{s}_{p}')
+
+def demo(pop_size):
+    # population = [represention.random_wheel_data() for _ in range(pop_size)]
+    pass
+
+if __name__ == '__main__':
+    run_experiments()
+    
+    # Uncomment for demo 
+    # TODO prepare demo variables
+    # demo()
