@@ -2,12 +2,12 @@ import random
 import numpy as np
 from const import NUM_PROPERTIES
 
-def genetic(wheel_matrix_1, wheel_matrix_2):
+def genetic(wheel_matrix_1, wheel_matrix_2, genetic_structure_function, genetic_property_function):
     structure_matrix_1, structure_matrix_2 = wheel_matrix_1[:-1], wheel_matrix_2[:-1]
-    out_structure_matrix = genetic_split_structure(structure_matrix_1, structure_matrix_2)
+    out_structure_matrix = genetic_structure_function(structure_matrix_1, structure_matrix_2)
 
     property_matrix_1, property_matrix_2 = wheel_matrix_1[-1], wheel_matrix_2[-1]
-    out_property_matrix = genetic_mean_properties(property_matrix_1, property_matrix_2)
+    out_property_matrix = genetic_property_function(property_matrix_1, property_matrix_2)
 
     return np.concatenate([out_structure_matrix, out_property_matrix])
 
@@ -64,7 +64,8 @@ def genetic_mean_properties(property_matrix_1, property_matrix_2):
 
     return property_matrix[:, None].T
 
-
+GENETIC_STRUCTURE_FUNCTIONS = [genetic_split_structure, genetic_split_structure_by_row, genetic_split_structure_by_element]
+GENETIC_PROPERTY_FUNCTIONS = [genetic_split_properties, genetic_split_properties_by_property, genetic_mean_properties]
 
 
 

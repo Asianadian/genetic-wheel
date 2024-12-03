@@ -3,7 +3,7 @@ import genetic
 import mutation
 import fitness
 from matplotlib import pyplot as plt
-from const import NUM_PROPERTIES
+from const import NUM_PROPERTIES, POPULATION_SIZE, NUM_ITERATIONS, NUM_OFFSPRING
 
 import random
 
@@ -90,9 +90,7 @@ def handle_exception(exc_type, exc_value, exc_traceback):
 
 sys.excepthook = handle_exception
 
-POPULATION_SIZE = 500
-
-def genetic_algorithm(population, num_iterations, offspring_per_generation, snapshots=False, graphs=False):
+def genetic_algorithm(population, num_iterations, offspring_per_generation, genetic_structure_function, genetic_property_function, snapshots=False, graphs=False):
   
   max_fitness_wheel_per_generation = []
 
@@ -128,7 +126,7 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, snap
     for o in range(offspring_per_generation):
       parent_a_i, parent_b_i = np.random.choice([i for i in range(len(population))], 2, False, p=population_fitness_prob)
       parent_a, parent_b = population[parent_a_i], population[parent_b_i]
-      curr_offspring = genetic.genetic(parent_a, parent_b)
+      curr_offspring = genetic.genetic(parent_a, parent_b, genetic_structure_function, genetic_property_function)
       mutation.mutate_full_wheel(curr_offspring)
       offspring.append(curr_offspring)
 
@@ -143,13 +141,15 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, snap
 
 population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
 
-population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, 100, 100, graphs=True)
+for genetic_structure_function in genetic.GENETIC_STRUCTURE_FUNCTIONS:
+    for genetic_property_function in genetic.GENETIC_PROPERTY_FUNCTIONS:
+        population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
 
-print(len(max_fitness_per_generation))
-fitness.visualize(max_fitness_wheel_per_generation)
-plot_max_fitness_per_generation(max_fitness_per_generation)
-plot_average_fitness_per_generation(avg_fitness_per_generation)
-plot_averate_properties_per_generation(avg_properties_per_generation)
+        # show results
+        fitness.visualize(max_fitness_wheel_per_generation)
+        plot_max_fitness_per_generation(max_fitness_per_generation)
+        plot_average_fitness_per_generation(avg_fitness_per_generation)
+        plot_averate_properties_per_generation(avg_properties_per_generation)
 
 # population_fitness = np.zeros(POPULATION_SIZE)
 # for i, p in enumerate(population):
