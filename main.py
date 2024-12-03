@@ -4,6 +4,8 @@ import mutation
 import fitness
 from const import NUM_PROPERTIES, POPULATION_SIZE, NUM_ITERATIONS, NUM_OFFSPRING
 
+from plot import plot_average_fitness_per_generation, plot_max_fitness_per_generation, plot_averate_properties_per_generation
+from const import NUM_PROPERTIES
 import numpy as np
 import sys
 
