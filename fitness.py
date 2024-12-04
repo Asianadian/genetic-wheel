@@ -46,13 +46,14 @@ def generate_space():
 '''
 Visualizes list of wheels in pygame
 '''
-def visualize(representations):
+def visualize(representations, meta_data=''):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-    pygame.display.set_caption("Rolling Wheel")
+    pygame.display.set_caption(f"Rolling Wheel {meta_data}")
 
     draw_options = pymunk.pygame_util.DrawOptions(screen)
-    draw_options.shape_outline_color = (0, 0, 0, 255)
+    draw_options.shape_outline_color = (10, 20, 30, 40)
+    draw_options.flags = pymunk.SpaceDebugDrawOptions.DRAW_SHAPES | pymunk.SpaceDebugDrawOptions.DRAW_CONSTRAINTS
 
     space = generate_space()
 
@@ -62,8 +63,8 @@ def visualize(representations):
         wheel = try_creating_wheel(representation)
         if wheel:
             wheels.append(wheel)
+            wheel.shape.color = (255*i/len(representations), 255*i/len(representations), 255*i/len(representations), 32)
             space.add(wheel.body, wheel.shape)
-            wheel.shape.color = (255*np.random.rand(), 255*np.random.rand(), 255*np.random.rand(), 32)
 
     clock = pygame.time.Clock()
 
@@ -80,7 +81,7 @@ def visualize(representations):
             space.step(1 / 60.0)
             t += 1
 
-            screen.fill((255, 255, 255))
+            screen.fill((20, 205, 240))
 
             space.debug_draw(draw_options)
 

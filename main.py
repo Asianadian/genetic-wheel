@@ -7,6 +7,9 @@ import mutation
 import numpy as np
 import represention
 import sys
+import time
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 '''
 Exception handling for Chipmunk2D 
@@ -32,7 +35,7 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, gene
   avg_properties_per_generation = np.zeros((num_iterations, NUM_PROPERTIES))
 
   for gen in range(num_iterations):
-    print('Generation', gen)
+    print('Generation:', gen)
     properties_this_generation = np.zeros((POPULATION_SIZE, NUM_PROPERTIES))
 
     population_fitness = np.zeros(POPULATION_SIZE)
@@ -82,23 +85,50 @@ Runs genetic algorithm with all variations of genetic functions and visualizes r
 def run_experiments():
     for s, genetic_structure_function in enumerate(genetic.GENETIC_STRUCTURE_FUNCTIONS):
         for p, genetic_property_function in enumerate(genetic.GENETIC_PROPERTY_FUNCTIONS):
-            
-            population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
-            population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
+            run_experiment_for_combination(s, p, genetic_structure_function, genetic_property_function)
 
-            # show results
-            fitness.visualize(max_fitness_wheel_per_generation)
-            plot_max_fitness_per_generation(max_fitness_per_generation, meta_data=f'_{s}_{p}')
-            plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data=f'_{s}_{p}')
-            plot_averate_properties_per_generation(avg_properties_per_generation, meta_data=f'_{s}_{p}')
+'''
+Runs genetic algorithm with given genetic functions and visualizes results
+'''
+def run_experiment_for_combination(s, p, genetic_structure_function, genetic_property_function):
+    start = time.time()
+    population = [represention.random_wheel_data() for _ in range(POPULATION_SIZE)]
+    population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, NUM_ITERATIONS, NUM_OFFSPRING, genetic_structure_function, genetic_property_function, graphs=True)
 
-def demo(pop_size):
-    # population = [represention.random_wheel_data() for _ in range(pop_size)]
-    pass
+    # Show results
+    print(f'[{s}|{p}] took {time.time() - start} seconds')
+    fitness.visualize(max_fitness_wheel_per_generation, meta_data=f'[{s}|{p}]')
+    plot_max_fitness_per_generation(max_fitness_per_generation, meta_data=f'_{s}_{p}')
+    plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data=f'_{s}_{p}')
+    plot_averate_properties_per_generation(avg_properties_per_generation, meta_data=f'_{s}_{p}')
+
+'''
+Demo function for live genetic algorithm showcase
+
+Runs genetic algorithm with given parameters and visualizes results
+'''
+def demo(pop_size, num_iter, num_offspring, genetic_structure_function, genetic_property_function):
+    start = time.time()
+    population = [represention.random_wheel_data() for _ in range(pop_size)]
+    population, max_fitness_wheel_per_generation, max_fitness_per_generation, avg_fitness_per_generation, avg_properties_per_generation = genetic_algorithm(population, num_iter, num_offspring, genetic_structure_function, genetic_property_function, graphs=True)
+
+    # show results
+    print(f'took {time.time() - start} seconds with {pop_size} population size, {num_iter} iterations, {num_offspring} offspring')
+    print(f'genetic_structure_function: {genetic_structure_function.__name__}, genetic_property_function: {genetic_property_function.__name__}')
+    fitness.visualize(max_fitness_wheel_per_generation)
+    plot_max_fitness_per_generation(max_fitness_per_generation, meta_data=f'_demo', show=True)
+    plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data=f'_demo', show=True)
+    plot_averate_properties_per_generation(avg_properties_per_generation, meta_data=f'_demo', show=True)
 
 if __name__ == '__main__':
     run_experiments()
     
-    # Uncomment for demo 
-    # TODO prepare demo variables
-    # demo()
+    # # uncomment for demo 
+    # population_size = 
+    # num_iterations = 
+    # num_offspring =
+    # # choice between: genetic_split_structure, genetic_split_structure_by_row, genetic_split_structure_by_element
+    # genetic_structure_function =
+    # # genetic_split_properties, genetic_split_properties_by_property, genetic_mean_properties
+    # genetic_property_function =
+    # demo(population_size, num_iterations, num_offspring, genetic_structure_function, genetic_property_function)
