@@ -83,10 +83,16 @@ Testing environment for genetic algorithm
 Runs genetic algorithm with all variations of genetic functions and visualizes results
 '''
 def run_experiments():
+    runs = []
+
     for s, genetic_structure_function in enumerate(genetic.GENETIC_STRUCTURE_FUNCTIONS):
         for p, genetic_property_function in enumerate(genetic.GENETIC_PROPERTY_FUNCTIONS):
-            run_experiment_for_combination(s, p, genetic_structure_function, genetic_property_function)
+            runs.append(run_experiment_for_combination(s, p, genetic_structure_function, genetic_property_function))
 
+    
+    for s, genetic_structure_function in enumerate(genetic.GENETIC_STRUCTURE_FUNCTIONS):
+        for p, genetic_property_function in enumerate(genetic.GENETIC_PROPERTY_FUNCTIONS):
+            fitness.visualize(runs[s*len(genetic.GENETIC_PROPERTY_FUNCTIONS) + p], meta_data=f'_{genetic_structure_function.__name__}_{genetic_property_function.__name__}')
 '''
 Runs genetic algorithm with given genetic functions and visualizes results
 '''
@@ -97,10 +103,12 @@ def run_experiment_for_combination(s, p, genetic_structure_function, genetic_pro
 
     # Show results
     print(f'[{s}|{p}] took {time.time() - start} seconds')
-    fitness.visualize(max_fitness_wheel_per_generation, meta_data=f'[{s}|{p}]')
+    # fitness.visualize(max_fitness_wheel_per_generation, meta_data=f'[{s}|{p}]')
     plot_max_fitness_per_generation(max_fitness_per_generation, meta_data=f'_{s}_{p}')
     plot_average_fitness_per_generation(avg_fitness_per_generation, meta_data=f'_{s}_{p}')
     plot_averate_properties_per_generation(avg_properties_per_generation, meta_data=f'_{s}_{p}')
+
+    return max_fitness_wheel_per_generation
 
 '''
 Demo function for live genetic algorithm showcase
