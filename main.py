@@ -27,7 +27,7 @@ def handle_exception(exc_type, exc_value, exc_traceback):
 sys.excepthook = handle_exception
 
 def genetic_algorithm(population, num_iterations, offspring_per_generation, genetic_structure_function, genetic_property_function, graphs=False):
-  
+  population_size = len(population)
   max_fitness_wheel_per_generation = []
 
   max_fitness_per_generation = np.zeros(num_iterations)
@@ -36,9 +36,9 @@ def genetic_algorithm(population, num_iterations, offspring_per_generation, gene
 
   for gen in range(num_iterations):
     print('Generation:', gen)
-    properties_this_generation = np.zeros((POPULATION_SIZE, NUM_PROPERTIES))
+    properties_this_generation = np.zeros((population_size, NUM_PROPERTIES))
 
-    population_fitness = np.zeros(POPULATION_SIZE)
+    population_fitness = np.zeros(population_size)
     for i, p in enumerate(population):
       population_fitness[i] = fitness.fitness_distance(p)
       properties_this_generation[i] = p[-1][:3]
@@ -132,11 +132,11 @@ if __name__ == '__main__':
     run_experiments()
     
     # # uncomment for demo 
-    # population_size = 
-    # num_iterations = 
-    # num_offspring =
+    # population_size = 200
+    # num_iterations = 100
+    # num_offspring = 40
     # # choice between: genetic_split_structure, genetic_split_structure_by_row, genetic_split_structure_by_element
-    # genetic_structure_function =
+    # genetic_structure_function = genetic.genetic_split_structure
     # # genetic_split_properties, genetic_split_properties_by_property, genetic_mean_properties
-    # genetic_property_function =
+    # genetic_property_function = genetic.genetic_split_properties
     # demo(population_size, num_iterations, num_offspring, genetic_structure_function, genetic_property_function)
